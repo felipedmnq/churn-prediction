@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from PIL import Image
+import joblib
 
 st.set_page_config(layout='wide')
 
@@ -79,7 +80,7 @@ st.sidebar.markdown(
     )
 
 ind_button = st.sidebar.checkbox(
-    'Multiple Prediction', help=ind_cust_pred
+    'Individual Prediction', help=ind_cust_pred
 )
 
 if ind_button:
@@ -138,4 +139,14 @@ if ind_button:
     df_dict['EstimatedSalary'] = st.sidebar.number_input('Estimated Salary', 0.0)
 
     df = pd.DataFrame(df_dict, index = [0])
-    st.write(df)
+
+    df['BalancePerAge'] = round(df['Balance'] / df['Age'], 2)
+
+    model = joblib.load('../models/CBC_model_C3_pipeline.joblib')
+    prob = model.predict_proba(df)
+
+    df['ChurnProba'] = [round((p * 100), 2) for i, p in prob.tolist()]
+
+    st.write(f'Estimated Salary: U$ {df["EstimatedSalary"][0]}')
+    st.write(f'Estimated Revenue: U$ {df["EstimatedSalary"][0] * 0.15}')
+    st.write(f'This customer has a CHURN probability of {round(prob[0][0] * 100, 2)} %')
