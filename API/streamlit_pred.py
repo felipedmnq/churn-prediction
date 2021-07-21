@@ -2,15 +2,31 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 import joblib
+from helper import *
 
 st.set_page_config(layout='wide')
 
 # Bank icon
 image1 = Image.open('pdf_images/bank_icon2.png')
+
 image2 = Image.open('pdf_images/bank_icon.png')
 
+# infos and instructions
+txt_inst = '''
+This APP was buld as part of a learning project. It was made in order to deploy a churn predition model and to train the use of the streamlit framework.
+
+You can find all the information about the project [HERE](https://github.com/felipedmnq/churn-prediction).
+'''
+
 st.image(image1, width=1000)
+
 st.sidebar.image(image2, width=100)
+
+# github badge
+link = '[![GitHub](https://badgen.net/badge/icon/GitHub?icon=github&label)]' \
+           '(https://github.com/felipedmnq/churn-prediction)'
+st.sidebar.write(link, unsafe_allow_html=True)
+
 
 # CSV file upload
 upload_help = '''
@@ -50,6 +66,10 @@ The app assume that the user knows who the customer is
 "Customer ID" and ask only for the needed information for the prediction.
 '''
 
+threshold_help = '''
+Churn percentage threshold
+'''
+
 # Multiple predictions
 st.sidebar.markdown('## MUTIPLE CUSTOMERS PREDICTION.')
 multi_button = st.sidebar.checkbox(
@@ -59,16 +79,34 @@ if multi_button:
     upload_file = st.sidebar.file_uploader(
         "Choose a CSV file"
         )
+    threshold = st.sidebar.slider(
+        'Threshold', 50, 100, 75, help=threshold_help
+        )
 
     if upload_file is not None:
-        df = pd.read_csv(upload_file).drop(
+        df = pd.read_csv(upload_file)
+        df_f = df
+        df = df.drop(columns = ['RowNumber', 'CustomerId', 'Surname', 'Exited'])
+
+        df['BalancePerAge'] = round(df['Balance'] / df['Age'], 2)
+        
+        model = joblib.load('../models/CBC_model_C3_pipeline.joblib')
+
+        prob = model.predict_proba(df)
+
+        df_f['ChurnProba'] = [round((p * 100), 2) for i, p in prob.tolist()]
+
+        df = df_f.drop(
             columns=[
-                    'RowNumber', 'Surname', 'Gender', 'Exited',
-                    'HasCrCard', 'IsActiveMember', 'Age', 'Tenure',
-                    'NumOfProducts'
+                    'RowNumber', 'Surname', 'Exited','Gender', 'HasCrCard', 'IsActiveMember', 'Age', 'Tenure', 'NumOfProducts'
                     ]
                 )
+        
+        df = df[df['ChurnProba']>=threshold]
+        st.write(f'Customers with {threshold}% or more of CHURN probability: {df.shape[0]}')
+        st.write(f'Total Estimated Revenue: U$ {round(df["EstimatedSalary"].sum() * 0.15, 2)}')
         st.write(df)
+        
 
 # Infos about top bank database format
 with st.sidebar.beta_expander("About Top Bank DB format:"):
@@ -85,7 +123,7 @@ ind_button = st.sidebar.checkbox(
 
 if ind_button:
     df_dict = {}
-    # df_dict population
+    customer_id = st.sidebar.text_input('Customer ID (name or identification number)', 'Customer ID')
     df_dict['CreditScore'] = st.sidebar.slider(
         'Credit Score', 0, 1000, 500
     )
@@ -147,6 +185,28 @@ if ind_button:
 
     df['ChurnProba'] = [round((p * 100), 2) for i, p in prob.tolist()]
 
+    st.write(f'Customer: {customer_id}')
     st.write(f'Estimated Salary: U$ {df["EstimatedSalary"][0]}')
     st.write(f'Estimated Revenue: U$ {df["EstimatedSalary"][0] * 0.15}')
-    st.write(f'This customer has a CHURN probability of {round(prob[0][0] * 100, 2)} %')
+    st.write(f'This customer has a CHURN probability of {round(prob[0][1] * 100, 2)} %')
+
+    low = Image.open('app_images/gauge1.png')
+    medium = Image.open('app_images/gauge2.png')
+    high = Image.open('app_images/gauge3.png')
+    v_high = Image.open('app_images/gauge4.png')
+
+    if (prob[0][1] * 100) < 40:
+        st.image(low, width=500)
+    elif 40 <= (prob[0][1] * 100) < 70:
+        st.image(medium, width=500)
+    elif 70 <= (prob[0][1] * 100) < 85:
+        st.image(high, width=500)
+    else:
+        st.image(v_high, width=500)
+    
+
+
+st.sidebar.markdown('### PROJECT INFOS.')
+st.sidebar.markdown(txt_inst)
+
+
