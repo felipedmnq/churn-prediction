@@ -2,14 +2,23 @@ import streamlit as st
 import pandas as pd
 from PIL import Image
 import joblib
-from helper import *
+import base64
+import time
 
+today = time.strftime('%d%m%Y-%H%M%S')
 st.set_page_config(layout='wide')
 
-# Bank icon
-image1 = Image.open('pdf_images/bank_icon2.png')
+def csv_download_link(data):
+    '''create a link to download a filtered csv file'''
+    csv = data.to_csv(index=False)
+    file_name = f'german_rent_houses_{time}.csv'
+    b64 = base64.b64encode(csv.encode()).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download CSV file</a>'
+    st.markdown(href, unsafe_allow_html=True)
 
-image2 = Image.open('pdf_images/bank_icon.png')
+image1 = Image.open('app_images/bank_icon2.png')
+
+image2 = Image.open('app_images/bank_icon.png')
 
 # infos and instructions
 txt_inst = '''
@@ -38,6 +47,7 @@ The app will return a table wil the main informations from the
 customers with an additional churn probability column and the estimaded revenue.
 '''
 
+# dataset format
 top_bank_db_format = '''
 The Top Bank database columns are:
 
@@ -57,6 +67,7 @@ The Top Bank database columns are:
 * Exited: if the client is a churn.
 '''
 
+# individual custoemrs prediction
 ind_cust_pred = '''
 Customer infos are added manually.
 
@@ -66,8 +77,9 @@ The app assume that the user knows who the customer is
 "Customer ID" and ask only for the needed information for the prediction.
 '''
 
-threshold_help = '''
-Churn percentage threshold
+# set a thrashhold for probabilityes
+thrashold_help = '''
+Churn probability thrashold
 '''
 
 # Multiple predictions
@@ -80,7 +92,7 @@ if multi_button:
         "Choose a CSV file"
         )
     threshold = st.sidebar.slider(
-        'Threshold', 50, 100, 75, help=threshold_help
+        'Thrashold', 50, 100, 75, help=thrashold_help
         )
 
     if upload_file is not None:
@@ -106,6 +118,15 @@ if multi_button:
         st.write(f'Customers with {threshold}% or more of CHURN probability: {df.shape[0]}')
         st.write(f'Total Estimated Revenue: U$ {round(df["EstimatedSalary"].sum() * 0.15, 2)}')
         st.write(df)
+
+        # Report Download
+
+
+        # csv file download
+        st.markdown('### :floppy_disk: CSV file Download')
+        download_csv = st.button('Export to CSV')
+        if download_csv:
+            csv_download_link((df))
         
 
 # Infos about top bank database format
