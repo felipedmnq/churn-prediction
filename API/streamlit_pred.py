@@ -5,38 +5,6 @@ import joblib
 import base64
 import time
 
-today = time.strftime('%d%m%Y-%H%M%S')
-st.set_page_config(layout='wide')
-
-def csv_download_link(data):
-    '''create a link to download a filtered csv file'''
-    csv = data.to_csv(index=False)
-    file_name = f'german_rent_houses_{time}.csv'
-    b64 = base64.b64encode(csv.encode()).decode()
-    href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download CSV file</a>'
-    st.markdown(href, unsafe_allow_html=True)
-
-image1 = Image.open('app_images/bank_icon2.png')
-
-image2 = Image.open('app_images/bank_icon.png')
-
-# infos and instructions
-txt_inst = '''
-This APP was buld as part of a learning project. It was made in order to deploy a churn predition model and to train the use of the streamlit framework.
-
-You can find all the information about the project [HERE](https://github.com/felipedmnq/churn-prediction).
-'''
-
-st.image(image1, width=1000)
-
-st.sidebar.image(image2, width=100)
-
-# github badge
-link = '[![GitHub](https://badgen.net/badge/icon/GitHub?icon=github&label)]' \
-           '(https://github.com/felipedmnq/churn-prediction)'
-st.sidebar.write(link, unsafe_allow_html=True)
-
-
 # CSV file upload
 upload_help = '''
 Input thru a CSV file.
@@ -72,15 +40,48 @@ ind_cust_pred = '''
 Customer infos are added manually.
 
 The app will return a churn probability for a individual customer with the estimated revenue. 
-
-The app assume that the user knows who the customer is
-"Customer ID" and ask only for the needed information for the prediction.
 '''
 
 # set a thrashhold for probabilityes
 thrashold_help = '''
 Churn probability thrashold
 '''
+
+# prediction button
+pred_button_help = '''
+Click here to run the prediction.
+'''
+
+today = time.strftime('%d%m%Y-%H%M%S')
+st.set_page_config(layout='wide')
+
+def csv_download_link(data):
+    '''create a link to download a filtered csv file'''
+    csv = data.to_csv(index=False)
+    file_name = f'german_rent_houses_{time}.csv'
+    b64 = base64.b64encode(csv.encode()).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download CSV file</a>'
+    st.markdown(href, unsafe_allow_html=True)
+
+image1 = Image.open('app_images/bank_icon2.png')
+
+image2 = Image.open('app_images/bank_icon.png')
+
+# infos and instructions
+txt_inst = '''
+This APP was buld as part of a learning project. It was made in order to deploy a churn predition model and to train the use of the streamlit framework.
+
+You can find all the information about the project [HERE](https://github.com/felipedmnq/churn-prediction).
+'''
+
+st.image(image1, width=1000)
+
+st.sidebar.image(image2, width=100)
+
+# github badge
+link = '[![GitHub](https://badgen.net/badge/icon/GitHub?icon=github&label)]'\
+    '(https://github.com/felipedmnq/churn-prediction)'
+st.sidebar.write(link, unsafe_allow_html=True)
 
 # Multiple predictions
 st.sidebar.markdown('## MUTIPLE CUSTOMERS PREDICTION.')
@@ -197,35 +198,39 @@ if ind_button:
     )
     df_dict['EstimatedSalary'] = st.sidebar.number_input('Estimated Salary', 0.0)
 
-    df = pd.DataFrame(df_dict, index = [0])
+    pred_button = st.sidebar.button(
+        'Churn Prediction', help=pred_button_help
+    )
 
-    df['BalancePerAge'] = round(df['Balance'] / df['Age'], 2)
+    if pred_button:
+        df = pd.DataFrame(df_dict, index = [0])
 
-    model = joblib.load('../models/CBC_model_C3_pipeline.joblib')
-    prob = model.predict_proba(df)
+        df['BalancePerAge'] = round(df['Balance'] / df['Age'], 2)
 
-    df['ChurnProba'] = [round((p * 100), 2) for i, p in prob.tolist()]
+        model = joblib.load('../models/CBC_model_C3_pipeline.joblib')
+        prob = model.predict_proba(df)
 
-    st.write(f'Customer: {customer_id}')
-    st.write(f'Estimated Salary: U$ {df["EstimatedSalary"][0]}')
-    st.write(f'Estimated Revenue: U$ {df["EstimatedSalary"][0] * 0.15}')
-    st.write(f'This customer has a CHURN probability of {round(prob[0][1] * 100, 2)} %')
+        df['ChurnProba'] = [round((p * 100), 2) for i, p in prob.tolist()]
 
-    low = Image.open('app_images/gauge1.png')
-    medium = Image.open('app_images/gauge2.png')
-    high = Image.open('app_images/gauge3.png')
-    v_high = Image.open('app_images/gauge4.png')
+        st.write(f'Customer: {customer_id}')
+        st.write(f'Estimated Salary: U$ {df["EstimatedSalary"][0]}')
+        st.write(f'Estimated Revenue: U$ {df["EstimatedSalary"][0] * 0.15}')
+        st.write(f'This customer has a CHURN probability of {round(prob[0][1] * 100, 2)} %')
 
-    if (prob[0][1] * 100) < 40:
-        st.image(low, width=500)
-    elif 40 <= (prob[0][1] * 100) < 70:
-        st.image(medium, width=500)
-    elif 70 <= (prob[0][1] * 100) < 85:
-        st.image(high, width=500)
-    else:
-        st.image(v_high, width=500)
-    
+        low = Image.open('app_images/gauge1.png')
+        medium = Image.open('app_images/gauge2.png')
+        high = Image.open('app_images/gauge3.png')
+        v_high = Image.open('app_images/gauge4.png')
 
+        if (prob[0][1] * 100) < 40:
+            st.image(low, width=500)
+        elif 40 <= (prob[0][1] * 100) < 70:
+            st.image(medium, width=500)
+        elif 70 <= (prob[0][1] * 100) < 85:
+            st.image(high, width=500)
+        else:
+            st.image(v_high, width=500)
+  
 
 st.sidebar.markdown('### PROJECT INFOS.')
 st.sidebar.markdown(txt_inst)
