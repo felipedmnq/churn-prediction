@@ -1,1 +1,1 @@
-web: sh setup.sh && streamlit run streamlit_pred.py
+web: sh setup.sh && cd api && streamlit run streamlit_pred.py
