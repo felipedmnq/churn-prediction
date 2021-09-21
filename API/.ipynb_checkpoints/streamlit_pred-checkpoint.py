@@ -103,7 +103,7 @@ if multi_button:
 
         df['BalancePerAge'] = round(df['Balance'] / df['Age'], 2)
         
-        model = joblib.load('../models/CBC_model_C3_pipeline.joblib')
+        model = joblib.load('models/CBC_model_C3_pipeline.joblib')
 
         prob = model.predict_proba(df)
 
@@ -207,7 +207,7 @@ if ind_button:
 
         df['BalancePerAge'] = round(df['Balance'] / df['Age'], 2)
 
-        model = joblib.load('../models/CBC_model_C3_pipeline.joblib')
+        model = joblib.load('models/CBC_model_C3_pipeline.joblib')
         prob = model.predict_proba(df)
 
         df['ChurnProba'] = [round((p * 100), 2) for i, p in prob.tolist()]
