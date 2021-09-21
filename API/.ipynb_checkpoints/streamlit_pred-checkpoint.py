@@ -63,7 +63,7 @@ def csv_download_link(data):
     href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">Download CSV file</a>'
     st.markdown(href, unsafe_allow_html=True)
 
-image1 = Image.open('../app_images/bank_icon2.png')
+image1 = Image.open('bank_icon2.png')
 
 image2 = Image.open('app_images/bank_icon.png')
 
