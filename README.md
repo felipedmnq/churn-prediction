@@ -6,13 +6,34 @@
 
 ## The Project Objective
 
+**Main objectives:**
+- Learn about classification problems.
+- Discover and study the main classification algorithms.
+- Discover and study the main  metrics for classification problems.
+
+**Secondary goals:**
+- Practice EDA.
+- Practice python programming concepts for Data Science.
+- Practice problem solving.
+_ Practice GitHub usage.
+- Practice Story Telling.
+
 ## The Problem
 
 TOP BANK is a bank that operates mainly in Europe offering financial products from bank accounts to investments, including some types of insurance and investment products. The company's main product is a bank account, in which the customer can deposit his salary, make withdrawals, deposits and transfer to other accounts. This bank account has no cost to the customer and is valid for 12 months, it means that the customer needs to renew the contract of that account to continue using it for the next 12 months. In the last few months the Analytics team realized that the rate of customers canceling their accounts and leaving the bank was raising and that worries the company.
 
-### The Challange
+## The Challange
 
 As a Data Science Consultant, you need to create an action plan to decrease the number of churn customers and deliver a possible solution for the problem. 
+
+## Planning
+
+* First look at the dataset.
+* Cleaning Dataset.
+* EDA.
+* Modeling.
+* Modeling evaluation.
+* Solution delivery.
 
 ## Tools Used to Solve the Problem
 
@@ -80,6 +101,49 @@ As a Data Science Consultant, you need to create an action plan to decrease the 
     </table>
 
 ## EDA
+
+**Dataset describe:**
+
+- RowNumber: the row number.
+- CustomerID: customer unique id.
+- Surname: customer surname.
+- CreditScore: customer credit score.
+- Geography: customer country.
+- Gender: customer gender.
+- Age: customer age.
+- Tenure: customer time of activity in years.
+- Balance: monetary values in the customer account.
+- NumOfProducts: number os banck products used by the customer.
+- HasCrCard: if the customer has or not credict card.
+- IsActiveMember: is the customer is active or not. Active: at least one bank movimentation in the past 12 months.
+- EstimateSalary: customer salary estimate.
+- Exited: if the customer is in churn or not.
+
+#### **Hypothesis Formulation**
+
+H1. Male customers are mole likely to churn than female customers.
+
+H2. Younger customers are mole likely to churn than older customers.
+
+H3. Customers with less time as customers are mole likely to churn.
+
+H4. Customers with less balance values are more likely to churn.
+
+H5. Customer with less bank products are more likely to churn.
+
+H6. Customer without creditcard are more likely to churn.
+
+H7. Active members are less likely to churn.
+
+H8. Customer with bigger estimated salary are less likely to churn.
+
+H9. Customers from which country are more likely to exit?
+
+H1 Validation: FALSE
+
+- Accordingly the data, women are more likely to churn than men.
+    - More than 25% of women have exited the bank, while only 16,45% of man have exited.
+    
 
 ## Model Deploy
 
