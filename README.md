@@ -183,18 +183,49 @@ H4. Customers with less balance values are more likely to churn.
 
 H5. Customer with less bank products are more likely to churn.
 
+  - Accordingly the data, customers with more products are more likely to exit.
+  - 100% (60) customers with 4 products (higher) are exited, 83% of customers with 3 products are exited, only 8% of customers with 2 products are exited and 28% of customers with 1 prouct are exited. So customers with more products are more likely to be exited.
+
+![poduts](https://user-images.githubusercontent.com/71295866/135174949-f7e2ccec-810e-4e15-a298-0eb4e65fc406.jpg)
+
+
+<h4 align="center">H5 Validation: FALSE</h4>
+
 H6. Customer without creditcard are more likely to churn.
+
+  - Accordingly the data, customers with and without credit card have the same behavior related to remain or not in the bank.
+  - The difference between the has or not a credit card is not significant. 20% of customers with credit card has exited against 21% of customers without credit card.
+
+![ccard](https://user-images.githubusercontent.com/71295866/135175120-408a535d-badf-4322-a9f4-689c7bbfc397.jpg)
+
+<h4 align="center">H6 Validation: INCONCLUSIVE</h4>
 
 H7. Active members are less likely to churn.
 
+  - Accordingly the data, active members are more likely to remain, where only 14% are exited. Not active members have 27% of exited customers.
+
+![active](https://user-images.githubusercontent.com/71295866/135175266-f11a74f7-02e0-474e-a087-d106f5ff7acf.jpg)
+
+<h4 align="center">H7 Validation: TRUE</h4>
+
 H8. Customer with bigger estimated salary are less likely to churn.
+
+  - Accordingly the data, the an estimated salary above or below the average has no influence if the customer will or will not remain as customer.
+  - This is very weird, the data is very well balanced when it is divided in 4 accordingly with min, 25%, 50%, 75% and max estimated salary.
+
+![salary2](https://user-images.githubusercontent.com/71295866/135175606-cf5854c8-7b01-4e26-9150-d8c92c171f0d.jpg)
+
+<h4 align="center">H8 Validation: INCONCLUSIVE</h4>
 
 H9. Customers from which country are more likely to exit?
 
+  - Germany is by far the country with more exited customers, 32%, followed by Spain, 17% and France, 16%.
+  
+![country](https://user-images.githubusercontent.com/71295866/135175882-4663727e-e00b-466b-a0ca-e35bb1f5f8aa.jpg)
 
+<h4 align="center">H9 Germany</h4>
 
     
-
 ## Model Deploy
 
 ## Next Steps
