@@ -228,6 +228,13 @@ H9. Customers from which country are more likely to exit?
     
 ## Model Deploy
 
-## Next Steps
+In order to put our model in production, it was developed a Streamlit APP where the user can insert an entire dataset with lots of customer informations and it will return the dataset with a new column containing the customer with more than 75% of churn probability and the estimated revenue in the case of all customer remain a client of the bank. The user can also download the new dataset as a .CSV file.
+
+<img width="1422" alt="Screen Shot 2021-10-03 at 18 36 22" src="https://user-images.githubusercontent.com/71295866/135772409-830afd39-20f3-4f47-8990-b2283305a6ab.png">
+
+
+Or the user can isert the data for a unique customer and see the probability of churn for this specific set of data.
+
+<img width="1435" alt="Screen Shot 2021-10-03 at 18 43 11" src="https://user-images.githubusercontent.com/71295866/135772502-972a95cc-07b8-44cb-a043-7d7684740cf3.png">
 
 ## Conclusion
